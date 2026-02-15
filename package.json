@@ -14,7 +14,7 @@
     "react-native": "0.84.0",
     "@react-native/new-app-screen": "0.84.0",
     "react-native-safe-area-context": "^5.5.2",
-    "@op-engineering/op-sqlite": "^11.0.0",
+    "@op-engineering/op-sqlite": "^15.2.5",
     "react-native-muslim-data": "file:../react-native-prayer-times"
   },
   "devDependencies": {

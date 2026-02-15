@@ -14,12 +14,10 @@ function App() {
   const [dbError, setDbError] = useState<string | null>(null);
 
   useEffect(() => {
-    try {
-      MuslimDb.getInstance().open();
-      setDbReady(true);
-    } catch (e: any) {
-      setDbError(e.message ?? 'Failed to open database');
-    }
+    MuslimDb.getInstance()
+      .open()
+      .then(() => setDbReady(true))
+      .catch((e: any) => setDbError(e.message ?? 'Failed to open database'));
   }, []);
 
   if (dbError) {

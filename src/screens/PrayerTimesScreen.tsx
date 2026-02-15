@@ -7,7 +7,6 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import {
-  MuslimDb,
   LocationRepository,
   PrayerTimeRepository,
   createPrayerAttribute,
@@ -51,9 +50,6 @@ export function PrayerTimesScreen() {
 
   useEffect(() => {
     try {
-      const db = MuslimDb.getInstance();
-      db.open();
-
       const locRepo = LocationRepository.getInstance();
       const loc = locRepo.geocoder('IQ', 'Erbil');
       setLocation(loc);
