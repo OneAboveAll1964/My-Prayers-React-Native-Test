@@ -9,7 +9,6 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import {
-  MuslimDb,
   LocationRepository,
   type Location,
 } from 'react-native-muslim-data';
