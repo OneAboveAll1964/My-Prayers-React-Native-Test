@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
+  TextInput,
   StyleSheet,
   ScrollView,
   TouchableOpacity,
@@ -47,31 +48,64 @@ export function PrayerTimesScreen() {
   const [method, setMethod] = useState(CalculationMethod.makkah);
   const [error, setError] = useState<string | null>(null);
   const [showMethods, setShowMethods] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searchResults, setSearchResults] = useState<Location[]>([]);
+  const [showSearch, setShowSearch] = useState(false);
 
+  // Set default location on first render
   useEffect(() => {
     try {
       const locRepo = LocationRepository.getInstance();
       const loc = locRepo.geocoder('IQ', 'Erbil');
-      setLocation(loc);
-
-      if (loc) {
-        const prayerRepo = PrayerTimeRepository.getInstance();
-        const attr = createPrayerAttribute({
-          calculationMethod: method,
-          asrMethod: AsrMethod.shafii,
-          higherLatitudeMethod: HigherLatitudeMethod.angleBased,
-        });
-        const pt = prayerRepo.getPrayerTimes({
-          location: loc,
-          date: new Date(),
-          attribute: attr,
-        });
-        setPrayerTime(pt);
-      }
+      if (loc) setLocation(loc);
     } catch (e: any) {
       setError(e.message);
     }
-  }, [method]);
+  }, []);
+
+  // Recalculate prayer times when location or method changes
+  useEffect(() => {
+    if (!location) return;
+    try {
+      const prayerRepo = PrayerTimeRepository.getInstance();
+      const attr = createPrayerAttribute({
+        calculationMethod: method,
+        asrMethod: AsrMethod.shafii,
+        higherLatitudeMethod: HigherLatitudeMethod.angleBased,
+      });
+      const pt = prayerRepo.getPrayerTimes({
+        location,
+        date: new Date(),
+        attribute: attr,
+      });
+      setPrayerTime(pt);
+      setError(null);
+    } catch (e: any) {
+      setError(e.message);
+    }
+  }, [location, method]);
+
+  const handleLocationSearch = (text: string) => {
+    setSearchQuery(text);
+    if (text.trim().length < 2) {
+      setSearchResults([]);
+      return;
+    }
+    try {
+      const locRepo = LocationRepository.getInstance();
+      const results = locRepo.searchLocations(text.trim());
+      setSearchResults(results.slice(0, 10));
+    } catch {
+      setSearchResults([]);
+    }
+  };
+
+  const selectLocation = (loc: Location) => {
+    setLocation(loc);
+    setSearchQuery('');
+    setSearchResults([]);
+    setShowSearch(false);
+  };
 
   const prayerTimes = prayerTime
     ? [
@@ -96,12 +130,49 @@ export function PrayerTimesScreen() {
       <ScrollView
         style={styles.scroll}
         contentContainerStyle={styles.content}
-        showsVerticalScrollIndicator={false}>
+        showsVerticalScrollIndicator={false}
+        keyboardShouldPersistTaps="handled">
         {error ? (
           <Card>
             <Text style={styles.errorText}>{error}</Text>
           </Card>
         ) : null}
+
+        <TouchableOpacity
+          style={styles.locationSelector}
+          onPress={() => setShowSearch(!showSearch)}
+          activeOpacity={0.7}>
+          <Text style={styles.locationSelectorText}>
+            {location ? `${location.name}, ${location.countryName}` : 'Select Location'}
+          </Text>
+          <Text style={styles.locationChangeText}>Change</Text>
+        </TouchableOpacity>
+
+        {showSearch && (
+          <View style={styles.searchContainer}>
+            <TextInput
+              style={styles.searchInput}
+              placeholder="Search city..."
+              placeholderTextColor={colors.textSecondary}
+              value={searchQuery}
+              onChangeText={handleLocationSearch}
+              autoFocus
+            />
+            {searchResults.map((loc, i) => (
+              <TouchableOpacity
+                key={`${loc.countryCode}-${loc.name}-${i}`}
+                style={styles.searchResult}
+                onPress={() => selectLocation(loc)}
+                activeOpacity={0.7}>
+                <Text style={styles.searchResultName}>{loc.name}</Text>
+                <Text style={styles.searchResultCountry}>{loc.countryName}</Text>
+              </TouchableOpacity>
+            ))}
+            {searchQuery.length >= 2 && searchResults.length === 0 && (
+              <Text style={styles.noResults}>No cities found</Text>
+            )}
+          </View>
+        )}
 
         <Text style={styles.dateText}>
           {new Date().toLocaleDateString('en-US', {
@@ -309,5 +380,65 @@ const styles = StyleSheet.create({
     ...fonts.regular,
     color: colors.error,
     textAlign: 'center',
+  },
+  locationSelector: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    backgroundColor: colors.surface,
+    padding: spacing.md,
+    borderRadius: radii.md,
+    borderWidth: 1,
+    borderColor: colors.primary,
+    marginBottom: spacing.md,
+  },
+  locationSelectorText: {
+    ...fonts.medium,
+    color: colors.text,
+    flex: 1,
+  },
+  locationChangeText: {
+    ...fonts.regular,
+    color: colors.primary,
+    fontWeight: '600',
+  },
+  searchContainer: {
+    backgroundColor: colors.surface,
+    borderRadius: radii.md,
+    borderWidth: 1,
+    borderColor: colors.border,
+    marginBottom: spacing.md,
+    overflow: 'hidden',
+  },
+  searchInput: {
+    ...fonts.regular,
+    color: colors.text,
+    padding: spacing.md,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.divider,
+  },
+  searchResult: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingVertical: spacing.sm + 2,
+    paddingHorizontal: spacing.md,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.divider,
+  },
+  searchResultName: {
+    ...fonts.medium,
+    color: colors.text,
+    fontWeight: '600',
+  },
+  searchResultCountry: {
+    ...fonts.regular,
+    color: colors.textSecondary,
+  },
+  noResults: {
+    ...fonts.regular,
+    color: colors.textSecondary,
+    textAlign: 'center',
+    padding: spacing.md,
   },
 });
