@@ -1,97 +1,71 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+# My Prayers — Demo App
 
-# Getting Started
+A demo React Native app showcasing all features of the [`react-native-muslim-data`](https://github.com/OneAboveAll1964/react-native-prayer-times) package.
 
-> **Note**: Make sure you have completed the [Set Up Your Environment](https://reactnative.dev/docs/set-up-your-environment) guide before proceeding.
+## Features
 
-## Step 1: Start Metro
+- **Prayer Times** — view daily prayer times with 7 calculation methods
+- **Location Services** — search, geocode, and reverse-geocode cities offline
+- **Azkars** — browse Hisnul Muslim categories, chapters, and items
+- **99 Names of Allah** — with translations and transliterations
+- **Multi-language** — switch between English, Arabic, Kurdish, Farsi, and Russian
 
-First, you will need to run **Metro**, the JavaScript build tool for React Native.
+## Prerequisites
 
-To start the Metro dev server, run the following command from the root of your React Native project:
+- Node.js >= 22
+- React Native development environment ([setup guide](https://reactnative.dev/docs/environment-setup))
+- The [`react-native-muslim-data`](https://github.com/OneAboveAll1964/react-native-prayer-times) package cloned alongside this project:
+  ```
+  your-workspace/
+  ├── react-native-prayer-times/   # git clone https://github.com/OneAboveAll1964/react-native-prayer-times
+  └── My-Prayers-React-Native-Test/  # git clone https://github.com/OneAboveAll1964/My-Prayers-React-Native-Test
+  ```
 
-```sh
-# Using npm
-npm start
+## Setup
 
-# OR using Yarn
-yarn start
+```bash
+# 1. Install dependencies
+npm install
+
+# 2. Link the database asset into native projects
+npx react-native-asset
+
+# 3. (iOS only) Install CocoaPods
+cd ios && pod install && cd ..
 ```
 
-## Step 2: Build and run your app
+## Run
 
-With Metro running, open a new terminal window/pane from the root of your React Native project, and use one of the following commands to build and run your Android or iOS app:
-
-### Android
-
-```sh
-# Using npm
+```bash
+# Android
 npm run android
 
-# OR using Yarn
-yarn android
-```
-
-### iOS
-
-For iOS, remember to install CocoaPods dependencies (this only needs to be run on first clone or after updating native deps).
-
-The first time you create a new project, run the Ruby bundler to install CocoaPods itself:
-
-```sh
-bundle install
-```
-
-Then, and every time you update your native dependencies, run:
-
-```sh
-bundle exec pod install
-```
-
-For more information, please visit [CocoaPods Getting Started guide](https://guides.cocoapods.org/using/getting-started.html).
-
-```sh
-# Using npm
+# iOS
 npm run ios
-
-# OR using Yarn
-yarn ios
 ```
 
-If everything is set up correctly, you should see your new app running in the Android Emulator, iOS Simulator, or your connected device.
+## Important Notes
 
-This is one way to run your app — you can also build it directly from Android Studio or Xcode.
+- **Android New Architecture** — `newArchEnabled` is set to `false` in `android/gradle.properties` because op-sqlite doesn't fully support the TurboModule interop layer yet.
+- **Local package link** — `react-native-muslim-data` is linked via `file:../react-native-prayer-times` in `package.json`. Metro is configured in `metro.config.js` to watch the local package. Both repos must be cloned as sibling directories.
+- **Database** — The SQLite database is in `android/app/src/main/assets/custom/muslim_db_v3.0.0.db` (placed by `npx react-native-asset`).
 
-## Step 3: Modify your app
+## Project Structure
 
-Now that you have successfully run the app, let's make changes!
-
-Open `App.tsx` in your text editor of choice and make some changes. When you save, your app will automatically update and reflect these changes — this is powered by [Fast Refresh](https://reactnative.dev/docs/fast-refresh).
-
-When you want to forcefully reload, for example to reset the state of your app, you can perform a full reload:
-
-- **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Dev Menu**, accessed via <kbd>Ctrl</kbd> + <kbd>M</kbd> (Windows/Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (macOS).
-- **iOS**: Press <kbd>R</kbd> in iOS Simulator.
-
-## Congratulations! :tada:
-
-You've successfully run and modified your React Native App. :partying_face:
-
-### Now what?
-
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [docs](https://reactnative.dev/docs/getting-started).
-
-# Troubleshooting
-
-If you're having issues getting the above steps to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
-
-# Learn More
-
-To learn more about React Native, take a look at the following resources:
-
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+```
+MyPrayersTest/
+├── App.tsx                          # Main app — DB init + tab navigation
+├── src/
+│   ├── components/
+│   │   ├── TabBar.tsx               # Bottom tab bar
+│   │   ├── Card.tsx                 # Reusable card component
+│   │   └── ScreenHeader.tsx         # Screen header with optional back button
+│   ├── screens/
+│   │   ├── PrayerTimesScreen.tsx    # Prayer times + method picker
+│   │   ├── LocationScreen.tsx       # Search / geocode / reverse geocode
+│   │   ├── AzkarsScreen.tsx         # Categories → chapters → items
+│   │   └── NamesOfAllahScreen.tsx   # 99 Names list
+│   └── theme.ts                     # Colors, spacing, fonts
+├── metro.config.js                  # Local package resolution
+└── package.json
+```
