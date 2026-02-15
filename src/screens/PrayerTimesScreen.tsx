@@ -15,7 +15,7 @@ import {
   HigherLatitudeMethod,
   type PrayerTime,
   type Location,
-} from 'react-native-muslim-data';
+} from 'react-native-prayer-times';
 import { ScreenHeader } from '../components/ScreenHeader';
 import { Card } from '../components/Card';
 import { colors, spacing, fonts, radii } from '../theme';

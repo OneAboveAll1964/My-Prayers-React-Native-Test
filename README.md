@@ -1,6 +1,6 @@
 # My Prayers — Demo App
 
-A demo React Native app showcasing all features of the [`react-native-muslim-data`](https://github.com/OneAboveAll1964/react-native-prayer-times) package.
+A demo React Native app showcasing all features of the [`react-native-prayer-times`](https://github.com/OneAboveAll1964/react-native-prayer-times) package.
 
 ## Features
 
@@ -14,12 +14,6 @@ A demo React Native app showcasing all features of the [`react-native-muslim-dat
 
 - Node.js >= 22
 - React Native development environment ([setup guide](https://reactnative.dev/docs/environment-setup))
-- The [`react-native-muslim-data`](https://github.com/OneAboveAll1964/react-native-prayer-times) package cloned alongside this project:
-  ```
-  your-workspace/
-  ├── react-native-prayer-times/   # git clone https://github.com/OneAboveAll1964/react-native-prayer-times
-  └── My-Prayers-React-Native-Test/  # git clone https://github.com/OneAboveAll1964/My-Prayers-React-Native-Test
-  ```
 
 ## Setup
 
@@ -47,7 +41,7 @@ npm run ios
 ## Important Notes
 
 - **Android New Architecture** — `newArchEnabled` is set to `false` in `android/gradle.properties` because op-sqlite doesn't fully support the TurboModule interop layer yet.
-- **Local package link** — `react-native-muslim-data` is linked via `file:../react-native-prayer-times` in `package.json`. Metro is configured in `metro.config.js` to watch the local package. Both repos must be cloned as sibling directories.
+- **Package** — `react-native-prayer-times` is installed from [npm](https://www.npmjs.com/package/react-native-prayer-times).
 - **Database** — The SQLite database is in `android/app/src/main/assets/custom/muslim_db_v3.0.0.db` (placed by `npx react-native-asset`).
 
 ## Project Structure
