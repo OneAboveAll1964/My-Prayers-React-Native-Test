@@ -10,7 +10,7 @@ import {
   NameOfAllahRepository,
   Language,
   type NameOfAllah,
-} from 'react-native-prayer-times';
+} from '@shkomaghdid/react-native-prayer-times';
 import { ScreenHeader } from '../components/ScreenHeader';
 import { Card } from '../components/Card';
 import { colors, spacing, fonts, radii } from '../theme';

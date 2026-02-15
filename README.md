@@ -1,6 +1,6 @@
 # My Prayers — Demo App
 
-A demo React Native app showcasing all features of the [`react-native-prayer-times`](https://github.com/OneAboveAll1964/react-native-prayer-times) package.
+A demo React Native app showcasing all features of the [`@shkomaghdid/react-native-prayer-times`](https://github.com/OneAboveAll1964/react-native-prayer-times) package.
 
 ## Features
 
@@ -41,7 +41,7 @@ npm run ios
 ## Important Notes
 
 - **Android New Architecture** — `newArchEnabled` is set to `false` in `android/gradle.properties` because op-sqlite doesn't fully support the TurboModule interop layer yet.
-- **Package** — `react-native-prayer-times` is installed from [npm](https://www.npmjs.com/package/react-native-prayer-times).
+- **Package** — `@shkomaghdid/react-native-prayer-times` is installed from [npm](https://www.npmjs.com/package/@shkomaghdid/react-native-prayer-times).
 - **Database** — The SQLite database is in `android/app/src/main/assets/custom/muslim_db_v3.0.0.db` (placed by `npx react-native-asset`).
 
 ## Project Structure
@@ -60,6 +60,6 @@ MyPrayersTest/
 │   │   ├── AzkarsScreen.tsx         # Categories → chapters → items
 │   │   └── NamesOfAllahScreen.tsx   # 99 Names list
 │   └── theme.ts                     # Colors, spacing, fonts
-├── metro.config.js                  # Local package resolution
+├── metro.config.js                  # Metro configuration
 └── package.json
 ```

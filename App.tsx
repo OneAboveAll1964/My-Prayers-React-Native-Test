@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { StatusBar, StyleSheet, View, Text } from 'react-native';
-import { MuslimDb } from 'react-native-prayer-times';
+import { MuslimDb } from '@shkomaghdid/react-native-prayer-times';
 import { TabBar, type TabId } from './src/components/TabBar';
 import { PrayerTimesScreen } from './src/screens/PrayerTimesScreen';
 import { LocationScreen } from './src/screens/LocationScreen';
