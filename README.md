@@ -2,6 +2,10 @@
 
 A demo React Native app showcasing all features of the [`@shkomaghdid/react-native-prayer-times`](https://github.com/OneAboveAll1964/react-native-prayer-times) package.
 
+## Demo
+
+<video src="assets/demo.mp4" width="300" controls></video>
+
 ## Features
 
 - **Prayer Times** — view daily prayer times with 7 calculation methods
