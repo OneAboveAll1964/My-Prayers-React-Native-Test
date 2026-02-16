@@ -146,6 +146,7 @@ export function PrayerTimesScreen() {
       for (let day = 1; day <= daysInMonth; day++) {
         const date = new Date(year, month, day);
         const pt = prayerRepo.getPrayerTimes({ location, date, attribute: attr });
+        if (!pt) continue;
         const dateStr = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
         csv += `${dateStr},${formatTime(pt.fajr)},${formatTime(pt.sunrise)},${formatTime(pt.dhuhr)},${formatTime(pt.asr)},${formatTime(pt.maghrib)},${formatTime(pt.isha)}\n`;
       }
