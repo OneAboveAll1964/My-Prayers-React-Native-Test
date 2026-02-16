@@ -4,7 +4,7 @@ A demo React Native app showcasing all features of the [`@shkomaghdid/react-nati
 
 ## Demo
 
-<video src="assets/demo.mp4" width="300" controls></video>
+https://github.com/user-attachments/assets/65bbb085-723f-46ee-b1bc-2a76c3336d34
 
 ## Features
 
