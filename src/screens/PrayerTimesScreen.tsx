@@ -6,6 +6,8 @@ import {
   StyleSheet,
   ScrollView,
   TouchableOpacity,
+  Share,
+  Alert,
 } from 'react-native';
 import {
   LocationRepository,
@@ -121,6 +123,42 @@ export function PrayerTimesScreen() {
   const currentMethodLabel =
     CALCULATION_METHODS.find((m) => m.key === method)?.label ?? method;
 
+  const exportMonthSchedule = async () => {
+    if (!location) return;
+    try {
+      const now = new Date();
+      const year = now.getFullYear();
+      const month = now.getMonth();
+      const daysInMonth = new Date(year, month + 1, 0).getDate();
+      const monthName = now.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+
+      const prayerRepo = PrayerTimeRepository.getInstance();
+      const attr = createPrayerAttribute({
+        calculationMethod: method,
+        asrMethod: AsrMethod.shafii,
+        higherLatitudeMethod: HigherLatitudeMethod.angleBased,
+      });
+
+      let csv = `Prayer Schedule - ${location.name}, ${location.countryName} - ${monthName}\n`;
+      csv += `Method: ${currentMethodLabel}\n\n`;
+      csv += 'Date,Fajr,Sunrise,Dhuhr,Asr,Maghrib,Isha\n';
+
+      for (let day = 1; day <= daysInMonth; day++) {
+        const date = new Date(year, month, day);
+        const pt = prayerRepo.getPrayerTimes({ location, date, attribute: attr });
+        const dateStr = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+        csv += `${dateStr},${formatTime(pt.fajr)},${formatTime(pt.sunrise)},${formatTime(pt.dhuhr)},${formatTime(pt.asr)},${formatTime(pt.maghrib)},${formatTime(pt.isha)}\n`;
+      }
+
+      await Share.share({
+        message: csv,
+        title: `Prayer Times - ${location.name} - ${monthName}`,
+      });
+    } catch (e: any) {
+      Alert.alert('Export Error', e.message ?? 'Failed to export schedule');
+    }
+  };
+
   return (
     <View style={styles.container}>
       <ScreenHeader
@@ -199,6 +237,16 @@ export function PrayerTimesScreen() {
           <Card>
             <Text style={styles.emptyText}>Loading prayer times...</Text>
           </Card>
+        )}
+
+        {location && prayerTimes.length > 0 && (
+          <TouchableOpacity
+            style={styles.exportButton}
+            onPress={exportMonthSchedule}
+            activeOpacity={0.7}>
+            <Text style={styles.exportButtonIcon}>📅</Text>
+            <Text style={styles.exportButtonText}>Export Month Schedule</Text>
+          </TouchableOpacity>
         )}
 
         <Text style={styles.sectionTitle}>Calculation Method</Text>
@@ -440,5 +488,23 @@ const styles = StyleSheet.create({
     color: colors.textSecondary,
     textAlign: 'center',
     padding: spacing.md,
+  },
+  exportButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: colors.primary,
+    padding: spacing.md,
+    borderRadius: radii.md,
+    marginTop: spacing.md,
+  },
+  exportButtonIcon: {
+    fontSize: 18,
+    marginRight: spacing.sm,
+  },
+  exportButtonText: {
+    ...fonts.medium,
+    color: colors.textLight,
+    fontWeight: '600',
   },
 });
